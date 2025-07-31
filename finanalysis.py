@@ -1,6 +1,6 @@
 import yfinance as yf
 import pandas as pd
-import streamlit as st   # add at top with other imports, the rest at the bottom
+import streamlit as st    
 import numpy as np
 
 # ---------------------   ------------------------
@@ -30,29 +30,37 @@ def portfolio_optimization(returns):
     return np.ones(len(returns.columns)) / len(returns.columns)
 
 
-# ---------------------   ------------------------
+# --------------------- User inputs  ------------------------
 st.title("Financial Analysis Web App")
-
 # User inputs
+# Building a list, removing spaces with strip ()
 tickers = st.text_input("Enter stock tickers (comma separated)", "AAPL, MSFT, GOOG").split(",")
-tickers = [ticker.strip() for ticker in tickers]
+tickers = [ticker.strip() for ticker in tickers] # Clean up data
+
+# Calendar picker needs this
 start_date = st.date_input("Start Date", pd.to_datetime("2020-01-01"))
 end_date = st.date_input("End Date", pd.to_datetime("2023-01-01"))
 
-# Fetch stock data
+# ---------------------  Fetch Data ------------------------
+# Fetch stock data - and clean it up more
+# Pass in ticker symbol  and dates
+# % change is a dataframe method, wut % change from row to row
+# drop NA - holidays,Sat/Sun no values - auto-drop
 stock_data = fetch_data(tickers, start_date, end_date)
 returns_data = stock_data.pct_change().dropna()
 
+# ---------------------  Chart  ------------------------
 # Visualizations
 st.subheader("Stock Prices")
 st.line_chart(stock_data)
 
+# ---------------------  Chart  ------------------------
 st.subheader("Stock Returns")
 st.line_chart(returns_data)
 
 sharpe_ratio = calculate_sharpe_ratio(returns_data)
 sortino_ratio = calculate_sortino_ratio(returns_data)
-
+'''
 # ---------------------   ------------------------
 st.subheader("Performance Metrics")
 st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
@@ -68,3 +76,4 @@ for ticker, weight in zip(tickers, optimal_weights):
 
 csv_data = stock_data.to_csv()
 st.download_button("Download Stock Data CSV", csv_data, "stock_data.csv")
+'''
