@@ -44,7 +44,7 @@ end_date = st.date_input("End Date", pd.to_datetime("2023-01-01"))
 # ---------------------  Fetch Data ------------------------
 # Fetch stock data - and clean it up more
 # Pass in ticker symbol  and dates
-# % change is a dataframe method, wut % change from row to row
+# % change is a dataframe method, with % change from row to row
 # drop NA - holidays,Sat/Sun no values - auto-drop
 stock_data = fetch_data(tickers, start_date, end_date)
 returns_data = stock_data.pct_change().dropna()
@@ -60,7 +60,7 @@ st.line_chart(returns_data)
 
 sharpe_ratio = calculate_sharpe_ratio(returns_data)
 sortino_ratio = calculate_sortino_ratio(returns_data)
-'''
+
 # ---------------------   ------------------------
 st.subheader("Performance Metrics")
 st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
@@ -76,4 +76,4 @@ for ticker, weight in zip(tickers, optimal_weights):
 
 csv_data = stock_data.to_csv()
 st.download_button("Download Stock Data CSV", csv_data, "stock_data.csv")
-'''
+
