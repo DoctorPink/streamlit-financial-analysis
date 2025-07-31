@@ -54,26 +54,36 @@ returns_data = stock_data.pct_change().dropna()
 st.subheader("Stock Prices")
 st.line_chart(stock_data)
 
-# ---------------------  Chart  ------------------------
+# ---------------------  Line Chart  ------------------------
 st.subheader("Stock Returns")
 st.line_chart(returns_data)
 
+# ---------------------  Calculate Ratios  ------------------------
+# compute two key metrics used in finance to measure risk-adjusted returns:
+# Sharpe Ratio: A ratio that compares the return of an investment to its risk.
+# Sortino Ratio: A variation of the Sharpe ratio, but it only considers the downside risk (negative returns).
+
 sharpe_ratio = calculate_sharpe_ratio(returns_data)
 sortino_ratio = calculate_sortino_ratio(returns_data)
-
+# Is high ratio value or low value good?
 # ---------------------   ------------------------
 st.subheader("Performance Metrics")
 st.write(f"Sharpe Ratio: {sharpe_ratio:.2f}")
 st.write(f"Sortino Ratio: {sortino_ratio:.2f}")
 
+# Get value of optimal weights for each of the tickers. 
 optimal_weights = portfolio_optimization(returns_data)
 
-# ---------------------   ------------------------
+# --------------------- NP to calculate a ratio on returns  ------------------------
+# Over all stock quotes based on user... all stocks selected in one portfolio
 st.subheader("Portfolio Optimization")
 st.write("Optimal Portfolio Weights:")
+
+# print them mto the screen
 for ticker, weight in zip(tickers, optimal_weights):
     st.write(f"{ticker}: {weight:.2%}")
 
+# --------------------- Allow users to download files  ------------------------
 csv_data = stock_data.to_csv()
 st.download_button("Download Stock Data CSV", csv_data, "stock_data.csv")
 
